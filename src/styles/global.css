@@ -244,6 +244,7 @@ a {
   position: absolute;
   border-radius: 50%;
   filter: blur(6px);
+  pointer-events: none;
 }
 
 .hero-section::before {
@@ -817,6 +818,7 @@ a {
 
 .portfolio-section {
   background: rgba(255, 255, 255, 0.34);
+  scroll-margin-top: 6rem;
 }
 
 .portfolio-filters {
