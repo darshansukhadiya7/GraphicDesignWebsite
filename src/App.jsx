@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   CircleArrowDown,
   X,
   MapPin,
@@ -9,6 +11,15 @@ import {
   MessageCircle,
   Phone,
   Sparkles,
+  Utensils,
+  Shirt,
+  ShoppingBag,
+  GraduationCap,
+  HeartPulse,
+  Building2,
+  PartyPopper,
+  Rocket,
+  Package,
   Palette,
   Monitor,
   Handshake,
@@ -47,6 +58,18 @@ const iconMap = {
   Handshake,
 }
 
+const industryIconMap = {
+  Utensils,
+  Shirt,
+  ShoppingBag,
+  GraduationCap,
+  HeartPulse,
+  Building2,
+  PartyPopper,
+  Rocket,
+  Package,
+}
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeFilter, setActiveFilter] = useState('All Projects')
@@ -54,7 +77,10 @@ function App() {
   const [scrolled, setScrolled] = useState(false)
   const [showAllServices, setShowAllServices] = useState(false)
   const [showAllProjects, setShowAllProjects] = useState(false)
-  const [showAllIndustries, setShowAllIndustries] = useState(false)
+  const industrySliderRef = useRef(null)
+  const [activeIndustryIndex, setActiveIndustryIndex] = useState(0)
+  const [industryAtStart, setIndustryAtStart] = useState(true)
+  const [industryAtEnd, setIndustryAtEnd] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30)
@@ -86,7 +112,47 @@ function App() {
   }, [activeFilter])
   const visibleServices = showAllServices ? services : services.slice(0, 6)
   const visibleProjects = showAllProjects ? filteredProjects : filteredProjects.slice(0, 6)
-  const visibleIndustries = showAllIndustries ? industries : industries.slice(0, 6)
+
+  const updateIndustryControls = () => {
+    const slider = industrySliderRef.current
+    if (!slider) return
+
+    const cards = slider.querySelectorAll('.industry-card')
+    const firstCard = cards[0]
+    if (!firstCard) return
+
+    const gap = Number.parseFloat(getComputedStyle(slider).columnGap) || 0
+    const step = firstCard.getBoundingClientRect().width + gap
+    setActiveIndustryIndex(Math.min(cards.length - 1, Math.round(slider.scrollLeft / step)))
+    setIndustryAtStart(slider.scrollLeft <= 5)
+    setIndustryAtEnd(slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 5)
+  }
+
+  useEffect(() => {
+    const slider = industrySliderRef.current
+    if (!slider) return
+
+    updateIndustryControls()
+    window.addEventListener('resize', updateIndustryControls)
+    return () => window.removeEventListener('resize', updateIndustryControls)
+  }, [])
+
+  const slideIndustries = (direction) => {
+    const slider = industrySliderRef.current
+    const firstCard = slider?.querySelector('.industry-card')
+    if (!slider || !firstCard) return
+
+    const gap = Number.parseFloat(getComputedStyle(slider).columnGap) || 0
+    slider.scrollBy({
+      left: direction * (firstCard.getBoundingClientRect().width + gap),
+      behavior: 'smooth',
+    })
+  }
+
+  const selectIndustry = (index) => {
+    const card = industrySliderRef.current?.querySelectorAll('.industry-card')[index]
+    card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+  }
 
   return (
     <>
@@ -164,43 +230,24 @@ function App() {
                 </div>
               </motion.div>
 
-              <motion.div
-                className="hero-visual"
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.9, ease: 'easeOut', delay: 0.2 }}
-              >
-                <div className="hero-visual-frame">
-                  <div className="ring-text">
-                    <span>A&amp;M</span>
-                    <small>Creative studio</small>
-                  </div>
-                  <motion.div
-                    className="hero-photo-wrap"
-                    animate={{ y: [0, -10, 0], rotate: [0, 0.6, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                  >
+              <div className="hero-visual">
+                <div className="hero-visual-frame hero-design-stage" role="img" aria-label="A designer working on creative ideas at a desk">
+                  <div className="hero-design-photo">
                     <img
-                      className="hero-photo"
-                      src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=85"
-                      alt="Creative workspace with colorful art and design materials"
-                      fetchPriority="high"
+                      className="hero-design-image"
+                      src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=85"
+                      alt=""
                     />
-                    <div className="photo-caption">
-                      <span>Ideas into impact</span>
-                      <strong>Made to be remembered.</strong>
+                    <div className="hero-design-shade" aria-hidden="true" />
+                    <span className="hero-design-tag">A&amp;M / VISUAL STUDIO</span>
+                    <div className="hero-design-caption">
+                      <span>CREATIVE PROCESS / 01</span>
+                      <strong>Ideas into<br />identity.</strong>
+                      <span>BRANDING · DIGITAL · PRINT</span>
                     </div>
-                  </motion.div>
-                  <div className="float-card card-one">
-                    <span>Brand Story</span>
-                    <strong>Creative Direction</strong>
-                  </div>
-                  <div className="float-card card-two">
-                    <span>Campaign</span>
-                    <strong>Modern &amp; memorable</strong>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             <div className="scroll-indicator">
@@ -397,7 +444,7 @@ function App() {
             </div>
           </section>
 
-          <section className="content-section industries-section">
+          <section id="industries" className="content-section industries-section">
             <div className="container">
               <SectionHeading
                 eyebrow="Industries We Serve"
@@ -405,33 +452,65 @@ function App() {
                 align="center"
               />
 
-              <div className="industries-grid">
-                {visibleIndustries.map((industry, index) => (
-                  <motion.div
+              <div className="industry-carousel">
+                <button
+                  type="button"
+                  className="industry-arrow"
+                  onClick={() => slideIndustries(-1)}
+                  disabled={industryAtStart}
+                  aria-label="Previous industries"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <div
+                  className="industry-scroller"
+                  role="region"
+                  aria-label="Industries we serve"
+                  tabIndex={0}
+                  ref={industrySliderRef}
+                  onScroll={updateIndustryControls}
+                >
+                  {industries.map((industry, index) => {
+                    const Icon = industryIconMap[industry.icon]
+                    return (
+                      <motion.article
+                        key={industry.name}
+                        className="industry-card"
+                        {...reveal}
+                        transition={{ duration: 0.45, delay: index * 0.05 }}
+                        whileHover={{ y: -5 }}
+                      >
+                        <div className="industry-logo-mark" aria-hidden="true">
+                          <Icon size={34} strokeWidth={1.7} />
+                        </div>
+                        <span>{industry.name}</span>
+                      </motion.article>
+                    )
+                  })}
+                </div>
+                <button
+                  type="button"
+                  className="industry-arrow"
+                  onClick={() => slideIndustries(1)}
+                  disabled={industryAtEnd}
+                  aria-label="Next industries"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+
+              <div className="industry-pagination" role="group" aria-label="Choose an industry">
+                {industries.map((industry, index) => (
+                  <button
                     key={industry.name}
-                    className="industry-card"
-                    {...reveal}
-                    transition={{ duration: 0.45, delay: index * 0.05 }}
-                    whileHover={{ y: -7, scale: 1.015 }}
-                    style={{ backgroundImage: `url("${industry.image}")` }}
-                  >
-                    <span>{industry.name}</span>
-                  </motion.div>
+                    type="button"
+                    className={index === activeIndustryIndex ? 'active' : ''}
+                    aria-label={`Show ${industry.name}`}
+                    aria-current={index === activeIndustryIndex ? 'true' : undefined}
+                    onClick={() => selectIndustry(index)}
+                  />
                 ))}
               </div>
-              {industries.length > 6 ? (
-                <div className="load-more-wrap">
-                  <button
-                    type="button"
-                    className="load-more-button"
-                    onClick={() => setShowAllIndustries((showAll) => !showAll)}
-                    aria-expanded={showAllIndustries}
-                  >
-                    {showAllIndustries ? 'Show fewer industries' : 'Explore all industries'}
-                    <ArrowRight size={17} />
-                  </button>
-                </div>
-              ) : null}
             </div>
           </section>
 
@@ -464,6 +543,19 @@ function App() {
                 <span>Good ideas</span>
                 <strong>deserve<br />great design.</strong>
               </motion.div>
+              {filteredProjects.length > 6 ? (
+                <div className="load-more-wrap">
+                  <button
+                    type="button"
+                    className="load-more-button"
+                    onClick={() => setShowAllProjects((showAll) => !showAll)}
+                    aria-expanded={showAllProjects}
+                  >
+                    {showAllProjects ? 'Show fewer projects' : 'Load more projects'}
+                    <ArrowRight size={17} />
+                  </button>
+                </div>
+              ) : null}
             </div>
           </section>
 

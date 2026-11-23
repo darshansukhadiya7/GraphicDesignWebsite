@@ -328,51 +328,15 @@ export const processSteps = [
 ]
 
 export const industries = [
-  {
-    name: 'Food & Beverages',
-    image:
-      'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Fashion & Lifestyle',
-    image:
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Retail & E-commerce',
-    image:
-      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Education',
-    image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Healthcare',
-    image:
-      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Corporate Businesses',
-    image:
-      'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Events & Entertainment',
-    image:
-      'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Startups',
-    image:
-      'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Consumer Products',
-    image:
-      'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=800&q=80',
-  },
+  { name: 'Food & Beverages', icon: 'Utensils' },
+  { name: 'Fashion & Lifestyle', icon: 'Shirt' },
+  { name: 'Retail & E-commerce', icon: 'ShoppingBag' },
+  { name: 'Education', icon: 'GraduationCap' },
+  { name: 'Healthcare', icon: 'HeartPulse' },
+  { name: 'Corporate Businesses', icon: 'Building2' },
+  { name: 'Events & Entertainment', icon: 'PartyPopper' },
+  { name: 'Startups', icon: 'Rocket' },
+  { name: 'Consumer Products', icon: 'Package' },
 ]
 
 export const structuredData = {
